@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type React from "react";
-import HeroImgDark from "@/assets/imgs/hero-dark.png";
-import HeroImgLight from "@/assets/imgs/hero-light.png";
+import HeroImgDark from "@/assets/imgs/new-hero-dark.png";
+import HeroImgLight from "@/assets/imgs/new-hero-light.png";
 import { GeminiIcon } from "@/components/common/icons";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
