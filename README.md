@@ -143,3 +143,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Support
 
 For support and questions, please open an issue in the repository or contact the development team.
+
+## Credits
+
+This project is based on the excellent [basecn](https://github.com/daFoggo/basecn) template by [daFoggo](https://github.com/daFoggo), which provides essential components and features built with shadcn/ui for kickstarting Next.js projects. The original basecn template serves as a comprehensive foundation for modern web applications with dashboard functionality, authentication, and analytics visualization.
+
+**Original Repository**: [https://github.com/daFoggo/basecn](https://github.com/daFoggo/basecn)
