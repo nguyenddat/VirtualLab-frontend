@@ -29,7 +29,7 @@ export const parseSources = (sources: string[] | SourceObject[]): Source[] => {
 // Hàm mở PDF với trang cụ thể
 export const openPDFWithPage = (pdfPath: string, page: number) => {
 	// Tạo URL với anchor để điều hướng đến trang cụ thể
-	const pdfUrl = `https://virtuallab.onrender.com//static/${pdfPath}#page=${page}`;
+	const pdfUrl = `https://virtuallab.onrender.com/static/${pdfPath}#page=${page}`;
 	window.open(pdfUrl, '_blank');
 };
 
