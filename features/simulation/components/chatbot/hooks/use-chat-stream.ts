@@ -5,7 +5,7 @@ import { Message, StreamResponse, ElectricExplainRequest } from '../types';
 import { parseSources, getCircuitData } from '../utils';
 
 interface UseChatStreamProps {
-	iframeRef: React.RefObject<HTMLIFrameElement>;
+	iframeRef: React.RefObject<HTMLIFrameElement | null>;
 }
 
 export const useChatStream = ({ iframeRef }: UseChatStreamProps) => {

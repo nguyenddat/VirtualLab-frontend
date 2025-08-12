@@ -2,9 +2,10 @@
 
 import type { ReactNode } from "react";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { SimulationContainer } from "@/features/simulation";
 
-const SimulationLayout = ({ children }: { children: ReactNode }) => {
+const SimulationLayoutContent = ({ children }: { children: ReactNode }) => {
 	const searchParams = useSearchParams();
 	const lessonTitle = searchParams.get('lesson') || "Thí nghiệm mạch điện DC";
 
@@ -12,6 +13,16 @@ const SimulationLayout = ({ children }: { children: ReactNode }) => {
 		<SimulationContainer lessonTitle={lessonTitle}>
 			{children}
 		</SimulationContainer>
+	);
+};
+
+const SimulationLayout = ({ children }: { children: ReactNode }) => {
+	return (
+		<Suspense fallback={<div>Loading...</div>}>
+			<SimulationLayoutContent>
+				{children}
+			</SimulationLayoutContent>
+		</Suspense>
 	);
 };
 

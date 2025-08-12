@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { RootFooter } from "@/components/layout/root-footer";
 import { RootHeader } from "@/components/layout/root-header";
 
 const ExploreLayout = ({ children }: { children: ReactNode }) => {

@@ -34,7 +34,7 @@ export const openPDFWithPage = (pdfPath: string, page: number) => {
 };
 
 // Hàm lấy dữ liệu mạch từ iframe
-export const getCircuitData = (iframeRef: React.RefObject<HTMLIFrameElement>): string => {
+export const getCircuitData = (iframeRef: React.RefObject<HTMLIFrameElement | null>): string => {
 	try {
 		const devices = (iframeRef.current?.contentWindow as any)?.getCurrentDevices?.();
 		return JSON.stringify(devices || {});

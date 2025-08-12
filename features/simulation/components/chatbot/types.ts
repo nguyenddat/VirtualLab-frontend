@@ -37,5 +37,5 @@ export interface SourceObject {
 export interface ChatbotProps {
 	isOpen: boolean;
 	onClose: () => void;
-	iframeRef: React.RefObject<HTMLIFrameElement>;
+	iframeRef: React.RefObject<HTMLIFrameElement | null>;
 }
