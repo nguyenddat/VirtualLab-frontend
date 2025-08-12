@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { SimulationHeader } from './simulation-header';
-import { Chatbot } from './chatbot';
+import { Chatbot } from './chatbot/chatbot';
 import { PhetCCKDC } from './simulation';
 
 interface SimulationContainerProps {
