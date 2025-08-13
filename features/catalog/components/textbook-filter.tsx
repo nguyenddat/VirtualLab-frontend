@@ -1,7 +1,7 @@
 'use client';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { SAMPLE_TEXTBOOKS } from '../utils/constants';
+import { useCatalogSWR } from '../hooks/use-catalog-swr';
 
 interface TextbookFilterProps {
   value?: string;
@@ -16,29 +16,22 @@ export const TextbookFilter = ({
   placeholder = "Chọn bộ sách",
   subjectFilter 
 }: TextbookFilterProps) => {
+  const { books, booksLoading } = useCatalogSWR();
+  
   const filteredTextbooks = subjectFilter && subjectFilter !== 'all'
-    ? SAMPLE_TEXTBOOKS.filter(book => book.subject === subjectFilter)
-    : SAMPLE_TEXTBOOKS;
-
-  // Loại bỏ các bộ sách trùng lặp dựa trên tên và nhà xuất bản
-  const uniqueTextbooks = filteredTextbooks.reduce((acc, textbook) => {
-    const key = `${textbook.name}-${textbook.publisher}`;
-    if (!acc.find(item => `${item.name}-${item.publisher}` === key)) {
-      acc.push(textbook);
-    }
-    return acc;
-  }, [] as typeof SAMPLE_TEXTBOOKS);
+    ? books.filter(book => book.subject_id === subjectFilter)
+    : books;
 
   return (
-    <Select value={value} onValueChange={onValueChange}>
+    <Select value={value} onValueChange={onValueChange} disabled={booksLoading}>
       <SelectTrigger className="w-full">
-        <SelectValue placeholder={placeholder} />
+        <SelectValue placeholder={booksLoading ? "Đang tải..." : placeholder} />
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">Tất cả bộ sách</SelectItem>
-        {uniqueTextbooks.map((textbook) => (
-          <SelectItem key={`${textbook.name}-${textbook.publisher}`} value={`${textbook.name}-${textbook.publisher}`}>
-            {textbook.name} - {textbook.publisher}
+        {filteredTextbooks.map((textbook) => (
+          <SelectItem key={textbook.id} value={textbook.id}>
+            {textbook.name}
           </SelectItem>
         ))}
       </SelectContent>

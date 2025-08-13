@@ -1,7 +1,7 @@
-import { PhetCCKDC } from "@/features/simulation";
+import { SimulationContainer } from "@/features/simulation";
 
 const SimulationPage = () => {
-	return <PhetCCKDC />;
+	return <SimulationContainer />;
 };
 
 export default SimulationPage;

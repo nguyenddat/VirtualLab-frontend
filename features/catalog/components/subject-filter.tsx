@@ -1,7 +1,7 @@
 'use client';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { SAMPLE_SUBJECTS } from '../utils/constants';
+import { useCatalogSWR } from '../hooks/use-catalog-swr';
 
 interface SubjectFilterProps {
   value?: string;
@@ -10,22 +10,18 @@ interface SubjectFilterProps {
 }
 
 export const SubjectFilter = ({ value, onValueChange, placeholder = "Chọn môn học" }: SubjectFilterProps) => {
+  const { subjects, subjectsLoading } = useCatalogSWR();
+
   return (
-    <Select value={value} onValueChange={onValueChange}>
+    <Select value={value} onValueChange={onValueChange} disabled={subjectsLoading}>
       <SelectTrigger className="w-full">
-        <SelectValue placeholder={placeholder} />
+        <SelectValue placeholder={subjectsLoading ? "Đang tải..." : placeholder} />
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">Tất cả môn học</SelectItem>
-        {SAMPLE_SUBJECTS.map((subject) => (
+        {subjects.map((subject) => (
           <SelectItem key={subject.id} value={subject.id}>
-            <div className="flex items-center gap-2">
-              <div 
-                className="w-3 h-3 rounded-full" 
-                style={{ backgroundColor: subject.color }}
-              />
-              {subject.name}
-            </div>
+            {subject.name}
           </SelectItem>
         ))}
       </SelectContent>

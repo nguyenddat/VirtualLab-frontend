@@ -2,10 +2,17 @@
 
 import { useState, useMemo } from 'react';
 import { Lesson, CatalogFilters } from '../utils/types';
-import { SAMPLE_LESSONS, SAMPLE_TEXTBOOKS } from '../utils/constants';
+import { useCatalogSWR } from './use-catalog-swr';
 
-export const useCatalog = (initialLessons: Lesson[] = SAMPLE_LESSONS) => {
-  const [lessons] = useState<Lesson[]>(initialLessons);
+export const useCatalog = () => {
+  const {
+    experiments: lessons,
+    books,
+    chapters,
+    isLoading: apiLoading,
+    error: apiError,
+  } = useCatalogSWR();
+  
   const [filters, setFilters] = useState<CatalogFilters>({});
   const [loading, setLoading] = useState(false);
 
@@ -14,46 +21,49 @@ export const useCatalog = (initialLessons: Lesson[] = SAMPLE_LESSONS) => {
       // Search filter
       if (filters.search) {
         const searchLower = filters.search.toLowerCase();
-        const matchesSearch = 
-          lesson.title.toLowerCase().includes(searchLower) ||
-          lesson.description.toLowerCase().includes(searchLower) ||
-          lesson.tags.some(tag => tag.toLowerCase().includes(searchLower));
+        const matchesSearch = lesson.name.toLowerCase().includes(searchLower);
         if (!matchesSearch) return false;
       }
 
-      // Subject filter
-      if (filters.subject && filters.subject !== 'all' && lesson.subject !== filters.subject) {
+      // Chapter filter
+      if (filters.chapter && filters.chapter !== 'all' && lesson.chapter_id !== filters.chapter) {
         return false;
       }
 
-      // Textbook filter
-      if (filters.textbook && filters.textbook !== 'all') {
-        const textbook = SAMPLE_TEXTBOOKS.find(t => t.id === lesson.textbook);
-        if (!textbook || `${textbook.name}-${textbook.publisher}` !== filters.textbook) {
+      // Subject, Grade, BookSet, Book filters - cần tìm thông tin từ chapter và book
+      if (filters.subject || filters.grade || filters.bookset || filters.book) {
+        // Tìm chapter của lesson
+        const chapter = chapters.find(c => c.id === lesson.chapter_id);
+        if (!chapter) return false;
+
+        // Tìm book của chapter
+        const book = books.find(b => b.id === chapter.book_id);
+        if (!book) return false;
+
+        // Subject filter
+        if (filters.subject && filters.subject !== 'all' && book.subject_id !== filters.subject) {
+          return false;
+        }
+
+        // Grade filter
+        if (filters.grade && filters.grade !== 'all' && book.grade !== filters.grade) {
+          return false;
+        }
+
+        // BookSet filter
+        if (filters.bookset && filters.bookset !== 'all' && book.bookset_id !== filters.bookset) {
+          return false;
+        }
+
+        // Book filter
+        if (filters.book && filters.book !== 'all' && chapter.book_id !== filters.book) {
           return false;
         }
       }
 
-      // Chapter filter
-      if (filters.chapter && filters.chapter !== 'all' && lesson.chapter !== filters.chapter) {
-        return false;
-      }
-
-      // Topic filter
-      if (filters.topic && filters.topic !== 'all' && lesson.topic !== filters.topic) {
-        return false;
-      }
-
-      // Grade filter
-      if (filters.grade && filters.grade !== 'all' && lesson.grade !== filters.grade) {
-        return false;
-      }
-
-
-
       return true;
     });
-  }, [lessons, filters]);
+  }, [lessons, filters, books, chapters]);
 
   const updateFilters = (newFilters: CatalogFilters) => {
     setFilters(newFilters);
@@ -78,7 +88,8 @@ export const useCatalog = (initialLessons: Lesson[] = SAMPLE_LESSONS) => {
   return {
     lessons: filteredLessons,
     filters,
-    loading,
+    loading: loading || apiLoading,
+    error: apiError,
     updateFilters,
     clearFilters,
     getFilterStats,

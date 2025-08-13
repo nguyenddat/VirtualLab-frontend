@@ -36,7 +36,14 @@ export const useChatStream = ({ iframeRef }: UseChatStreamProps) => {
 		setNextId(prev => prev + 1);
 
 		// Lấy dữ liệu mạch từ iframe
-		const circuitJson = getCircuitData(iframeRef);
+		let circuitJson = '{}';
+		try {
+			circuitJson = getCircuitData(iframeRef);
+			console.log(circuitJson);
+		} catch (err) {
+			console.error('Lỗi lấy dữ liệu mạch:', err);
+			circuitJson = '{}';
+		}
 
 		// Thêm tin nhắn bot rỗng (streaming)
 		const botId = nextId + 1;

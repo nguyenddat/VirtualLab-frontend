@@ -1,7 +1,8 @@
 'use client';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { SAMPLE_TOPICS, SAMPLE_LESSONS } from '../utils/constants';
+import { useCatalogSWR } from '../hooks/use-catalog-swr';
+import { useMemo } from 'react';
 
 interface TopicFilterProps {
   value?: string;
@@ -20,31 +21,16 @@ export const TopicFilter = ({
   chapterFilter,
   gradeFilter
 }: TopicFilterProps) => {
-  const filteredTopics = SAMPLE_TOPICS.filter(topic => {
-    if (subjectFilter && subjectFilter !== 'all' && topic.subject !== subjectFilter) return false;
-    if (chapterFilter && chapterFilter !== 'all' && topic.chapter !== chapterFilter) return false;
-    if (gradeFilter && gradeFilter !== 'all') {
-      // Kiểm tra xem có bài học nào thuộc chủ đề này và lớp được chọn không
-      const hasLessonInGrade = SAMPLE_LESSONS.some(lesson => 
-        lesson.topic === topic.id && lesson.grade === gradeFilter
-      );
-      if (!hasLessonInGrade) return false;
-    }
-    return true;
-  });
-
+  const { experiments, experimentsLoading } = useCatalogSWR();
+  
+  // Vì API không cung cấp thông tin topic, hiển thị thông báo
   return (
-    <Select value={value} onValueChange={onValueChange}>
+    <Select value={value} onValueChange={onValueChange} disabled={true}>
       <SelectTrigger className="w-full">
-        <SelectValue placeholder={placeholder} />
+        <SelectValue placeholder="Không có dữ liệu" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="all">Tất cả chủ đề</SelectItem>
-        {filteredTopics.map((topic) => (
-          <SelectItem key={topic.id} value={topic.id}>
-            {topic.name}
-          </SelectItem>
-        ))}
+        <SelectItem value="all">Không có dữ liệu</SelectItem>
       </SelectContent>
     </Select>
   );

@@ -4,14 +4,13 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Filter, Search, X } from 'lucide-react';
 import { SubjectFilter } from './subject-filter';
-import { TextbookFilter } from './textbook-filter';
+import { GradeFilter } from './grade-filter';
+import { BookSetFilter } from './bookset-filter';
+import { BookFilter } from './book-filter';
 import { ChapterFilter } from './chapter-filter';
-import { TopicFilter } from './topic-filter';
 import { CatalogFilters } from '../utils/types';
-import { GRADE_OPTIONS } from '../utils/constants';
 
 interface CatalogFiltersProps {
     filters: CatalogFilters;
@@ -78,56 +77,34 @@ export const CatalogFiltersComponent = ({ filters, onFiltersChange }: CatalogFil
                 </div>
 
                 {/* Basic Filters */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <SubjectFilter
                         value={filters.subject}
                         onValueChange={(value) => handleFilterChange('subject', value)}
                     />
-                    <TextbookFilter
-                        value={filters.textbook}
-                        onValueChange={(value) => handleFilterChange('textbook', value)}
-                        subjectFilter={filters.subject}
+                    <GradeFilter
+                        value={filters.grade}
+                        onValueChange={(value) => handleFilterChange('grade', value)}
                     />
-                    <Select value={filters.grade} onValueChange={(value) => handleFilterChange('grade', value)}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Chọn lớp" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">Tất cả lớp</SelectItem>
-                            {GRADE_OPTIONS.map((grade) => (
-                                <SelectItem key={grade.value} value={grade.value}>
-                                    {grade.label}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    <BookSetFilter
+                        value={filters.bookset}
+                        onValueChange={(value) => handleFilterChange('bookset', value)}
+                    />
+                    <BookFilter
+                        value={filters.book}
+                        onValueChange={(value) => handleFilterChange('book', value)}
+                        booksetFilter={filters.bookset}
+                    />
                 </div>
 
-                {/* Chapter Filter - Show when subject, textbook, and grade are selected */}
-                {filters.subject && filters.subject !== 'all' && 
-                 filters.textbook && filters.textbook !== 'all' && 
-                 filters.grade && filters.grade !== 'all' && (
+                {/* Chapter Filter - Show when book is selected */}
+                {filters.book && filters.book !== 'all' && (
                     <div className="pt-4 border-t">
                         <ChapterFilter
                             value={filters.chapter}
                             onValueChange={(value) => handleFilterChange('chapter', value)}
-                            subjectFilter={filters.subject}
-                            textbookFilter={filters.textbook}
-                            gradeFilter={filters.grade}
-                            placeholder="Chọn chương theo bộ sách và lớp"
-                        />
-                    </div>
-                )}
-
-                {/* Advanced Filters */}
-                {isExpanded && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
-                        <TopicFilter
-                            value={filters.topic}
-                            onValueChange={(value) => handleFilterChange('topic', value)}
-                            subjectFilter={filters.subject}
-                            chapterFilter={filters.chapter}
-                            gradeFilter={filters.grade}
+                            bookFilter={filters.book}
+                            placeholder="Chọn chương theo sách"
                         />
                     </div>
                 )}

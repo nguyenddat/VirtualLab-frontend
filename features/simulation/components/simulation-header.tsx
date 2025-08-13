@@ -6,21 +6,23 @@ import { ArrowLeft, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "@/components/common/theme-switcher";
+import { ExperimentData } from "../services/simulation";
 
 interface SimulationHeaderProps {
-	lessonTitle: string;
+	lessonName: string;
+	experimentData?: ExperimentData;
 	isChatbotOpen: boolean;
 	onToggleChatbot: () => void;
 }
 
 export const SimulationHeader = ({ 
-	lessonTitle, 
-	isChatbotOpen, 
-	onToggleChatbot 
+	lessonName, 
+	isChatbotOpen,
+	onToggleChatbot
 }: SimulationHeaderProps) => {
 	const breadcrumbItems = [
 		{
-			title: lessonTitle,
+			title: lessonName,
 			url: "/explore",
 			isCurrentPage: false,
 		},

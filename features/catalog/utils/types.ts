@@ -1,40 +1,32 @@
 export interface Lesson {
   id: string;
-  title: string;
-  description: string;
-  subject: string;
-  textbook: string;
-  chapter: string;
-  topic: string;
-  grade: string;
-  duration: number; // in minutes
-  difficulty: 'easy' | 'medium' | 'hard';
-  thumbnail?: string;
-  tags: string[];
-  createdAt: string;
-  updatedAt: string;
+  name: string;
+  chapter_id: string;
 }
 
 export interface Subject {
   id: string;
   name: string;
-  code: string;
-  color: string;
 }
 
-export interface Textbook {
+export interface BookSet {
   id: string;
   name: string;
-  publisher: string;
-  subject: string;
+}
+
+export interface Book {
+  id: string;
+  name: string;
+  grade: string;
+  static_file_path?: string;
+  subject_id: string;
+  bookset_id: string;
 }
 
 export interface Chapter {
   id: string;
   name: string;
-  number: number;
-  subject: string;
-  textbook: string;
+  book_id: string;
 }
 
 export interface Topic {
@@ -46,7 +38,8 @@ export interface Topic {
 
 export interface CatalogFilters {
   subject?: string;
-  textbook?: string;
+  bookset?: string;
+  book?: string;
   chapter?: string;
   topic?: string;
   grade?: string;
@@ -57,7 +50,8 @@ export interface CatalogFilters {
 export interface CatalogState {
   lessons: Lesson[];
   subjects: Subject[];
-  textbooks: Textbook[];
+  booksets: BookSet[];
+  books: Book[];
   chapters: Chapter[];
   topics: Topic[];
   filters: CatalogFilters;
