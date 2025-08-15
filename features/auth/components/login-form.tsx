@@ -24,9 +24,10 @@ import { Input } from "@/components/ui/input";
 import { APP_INFO } from "@/lib/configs/app-info";
 import { cn } from "@/lib/utils/tailwind";
 import { useAuthContext } from "../contexts/auth-context";
+import { getRedirectPathByRole } from "../utils/functions";
 
 const formSchema = z.object({
-	userName: z
+	username: z
 		.string()
 		.min(1, { message: "Username is required" })
 		.min(3, { message: "Username must be at least 3 characters" }),
@@ -39,22 +40,23 @@ type FormValues = z.infer<typeof formSchema>;
 
 export const LoginForm = () => {
 	const router = useRouter();
-	const { login, isLoggingIn, loginError, resetLogin, isAuthenticated } =
+	const { login, isLoggingIn, loginError, resetLogin, isAuthenticated, user } =
 		useAuthContext();
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			userName: "",
+			username: "",
 			password: "",
 		},
 	});
 
 	useEffect(() => {
-		if (isAuthenticated) {
-			router.push("/dashboard");
+		if (isAuthenticated && user) {
+			const redirectPath = getRedirectPathByRole(user.role);
+			router.push(redirectPath);
 		}
-	}, [isAuthenticated, router]);
+	}, [isAuthenticated, user, router]);
 
 	useEffect(() => {
 		if (loginError) {
@@ -64,7 +66,7 @@ export const LoginForm = () => {
 
 	async function onSubmit(values: FormValues) {
 		await login({
-			userName: values.userName,
+			username: values.username,
 			password: values.password,
 		});
 	}
@@ -81,19 +83,22 @@ export const LoginForm = () => {
 									<p className="text-muted-foreground text-balance">
 										Login to your {APP_INFO.name} account
 									</p>
+									<p className="text-xs text-muted-foreground mt-2">
+										Test accounts: student1, teacher1, admin1 (any password)
+									</p>
 								</div>
 
 								<FormField
 									control={form.control}
-									name="userName"
+									name="username"
 									render={({ field }) => (
 										<FormItem className="gap-4 grid">
-											<FormLabel htmlFor="userName">Username</FormLabel>
+											<FormLabel htmlFor="username">Username</FormLabel>
 											<FormControl>
 												<Input
-													id="userName"
+													id="username"
 													type="text"
-													placeholder="Enter your user name"
+													placeholder="Enter your username"
 													disabled={isLoggingIn}
 													{...field}
 												/>

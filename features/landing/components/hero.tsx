@@ -6,39 +6,42 @@ import { GeminiIcon } from "@/components/common/icons";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { TECH_STACK } from "../utils/constants";
+import { HeroPattern } from "./background-pattern";
 
 export function Hero() {
 	return (
-		<section className="isolate py-24 md:py-32 lg:py-40 w-full container">
+		<section className="isolate py-16 md:py-20 lg:py-24 w-full container relative">
+			<HeroPattern />
+			
 			<div className="z-10 relative">
-				<div className="items-center gap-12 grid lg:grid-cols-2">
+				<div className="items-center gap-8 grid lg:grid-cols-2">
 					<div className="mx-auto lg:mx-0 max-w-2xl text-left">
 						<div>
 							<Badge
-								className="mb-3 px-3 py-1 rounded-full font-semibold text-sm"
+								className="mb-4 px-3 py-1 rounded-full font-semibold text-sm"
 								variant="secondary"
 							>
 								<GeminiIcon className="size-4 text-primary" />
-								ViLAB
+								ViLAB - Nền tảng học tập STEM
 							</Badge>
 						</div>
-						<p className="bg-clip-text bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 mb-6 font-bold text-transparent text-4xl md:text-5xl lg:text-6xl tracking-tight">
-							Let's start exploring{" "}
+						<p className="bg-clip-text bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 mb-4 font-bold text-transparent text-4xl md:text-5xl lg:text-6xl tracking-tight">
+							Khám phá thế giới{" "}
 							<span className="font-serif font-medium text-primary italic">
 							STEM
 							</span>
 							<br />
-							learning online!
+							trực tuyến!
 						</p>
 						<p className="mb-6 text-muted-foreground text-lg md:text-xl leading-relaxed">
-						Hỗ trợ giáo viên và học sinh tiếp cận các bài giảng STEM hiện đại với mô phỏng thí nghiệm online, kho học liệu số phong phú và công cụ tương tác trực tiếp.
+						Nền tảng học tập STEM hiện đại với mô phỏng thí nghiệm trực tuyến, kho học liệu số phong phú và công cụ tương tác trực tiếp cho giáo viên và học sinh.
 						</p>
 
 						<div className="mt-6">
 							<p className="mb-3 font-semibold text-muted-foreground text-sm">
-								Xây dựng theo tiêu chí
+								Được xây dựng với các tiêu chí
 							</p>
-							<div className="gap-4 grid grid-cols-2 lg:grid-cols-3">
+							<div className="gap-3 grid grid-cols-2 lg:grid-cols-3">
 								{TECH_STACK.map((tech) => (
 									<TechCard
 										key={tech.id}
@@ -56,13 +59,13 @@ export function Hero() {
 						<Card className="relative bg-gradient-to-b from-background to-background/95 shadow-xl backdrop-blur p-0 overflow-hidden">
 							<Image
 								src={HeroImgLight}
-								alt="Hero Image Light"
+								alt="Hình ảnh minh họa ViLAB"
 								className="dark:hidden"
 								priority
 							/>
 							<Image
 								src={HeroImgDark}
-								alt="Hero Image Dark"
+								alt="Hình ảnh minh họa ViLAB"
 								className="hidden dark:block"
 								priority
 							/>
@@ -70,8 +73,6 @@ export function Hero() {
 					</div>
 				</div>
 			</div>
-			<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_90%_30%,var(--muted),transparent_35%)] blur-3xl"></div>
-			<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_10%_70%,var(--muted),transparent_10%)] blur-3xl"></div>
 		</section>
 	);
 }
@@ -95,7 +96,7 @@ const TechCard = ({
 			className="no-underline"
 		>
 			<Card className="group hover:bg-primary/5 p-0 hover:border-primary/100 h-full transition-all duration-300">
-				<CardContent className="flex items-center gap-4 p-3">
+				<CardContent className="flex items-center gap-3 p-3">
 					<div className="flex-shrink-0 p-2 border group-hover:border-primary/70 rounded-md group-hover:text-primary transition-all">
 						{icon}
 					</div>

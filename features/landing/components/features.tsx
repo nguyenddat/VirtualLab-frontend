@@ -9,16 +9,19 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { FEATURES } from "../utils/constants";
 import type { IFeature } from "../utils/types";
+import { FeaturesPattern } from "./background-pattern";
 
 export const Features = () => {
 	return (
-		<section id="features" className="py-12 md:py-16 w-full container">
+		<section id="features" className="py-8 md:py-12 w-full container relative">
+			<FeaturesPattern />
+			
 			<motion.div
 				initial={{ opacity: 0, y: 20 }}
 				whileInView={{ opacity: 1, y: 0 }}
 				viewport={{ once: true }}
 				transition={{ duration: 0.5 }}
-				className="flex flex-col justify-center items-center space-y-3 mb-12 text-center"
+				className="flex flex-col justify-center items-center space-y-3 mb-8 text-center relative z-10"
 			>
 				<div className="flex justify-center items-center gap-4 mb-3">
 					<Badge
@@ -26,18 +29,18 @@ export const Features = () => {
 						variant="secondary"
 					>
 						<GeminiIcon className="size-4 text-primary" />
-						Features
+						Tính năng chính
 					</Badge>
 				</div>
 				<p className="bg-clip-text bg-gradient-to-r from-foreground to-foreground/80 font-bold text-transparent text-3xl md:text-4xl tracking-tight">
-					Core features
+					Các tính năng nổi bật
 				</p>
 				<p className="max-w-[800px] text-muted-foreground md:text-lg">
-					Khám phá tổng quan tính năng chính của chúng tôi
+					Khám phá tổng quan các tính năng chính của nền tảng ViLAB
 				</p>
 			</motion.div>
 
-			<div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-12">
+			<div className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-8 relative z-10">
 				{FEATURES.map((feature, index) => (
 					<motion.div
 						key={feature.name}
@@ -56,7 +59,7 @@ export const Features = () => {
 				whileInView={{ opacity: 1, y: 0 }}
 				viewport={{ once: true }}
 				transition={{ duration: 0.5, delay: 0.6 }}
-				className="flex justify-center mt-12"
+				className="flex justify-center mt-8 relative z-10"
 				style={{ position: "relative", zIndex: 20 }}
 			>
 				<Link href="/explore" passHref>
@@ -79,8 +82,8 @@ const FeatureCard = ({ feature }: { feature: IFeature }) => {
 			}}
 			className="h-full"
 		>
-			<Card className="hover:shadow-primary p-0 hover:border-primary/100 h-full overflow-hidden transition-all cursor-pointer">
-				<div className="relative p-3 h-full">
+			<Card className="hover:shadow-primary p-0 hover:border-primary/100 h-full overflow-hidden transition-all cursor-pointer backdrop-blur-sm bg-background/80">
+				<div className="relative p-4 h-full">
 					<div className="-top-10 -right-10 absolute bg-gradient-to-b from-primary/20 to-primary/5 opacity-80 blur-3xl w-32 h-32 pointer-events-none" />
 					<div className="z-10 relative">
 						<div className="flex justify-center items-center bg-gradient-to-br from-primary/10 to-primary/5 mb-3 rounded-lg size-12 text-primary">

@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://virtuallab.onrender.com/api';
+import { API_ENDPOINTS, apiHelpers } from '@/lib/configs/api';
 
 export interface ExperimentDevice {
   name: string;
@@ -28,7 +28,7 @@ export const simulationService = {
   // Lấy dữ liệu dụng cụ của thí nghiệm theo experiment_id
   async getExperimentData(experimentId: number): Promise<ExperimentData> {
     try {
-      const response = await fetch(`${API_BASE_URL}/experiment/${experimentId}`);
+      const response = await fetch(apiHelpers.buildUrl(API_ENDPOINTS.SIMULATION.EXPERIMENT_DATA(experimentId)));
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

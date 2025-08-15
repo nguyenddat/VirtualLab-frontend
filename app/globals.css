@@ -400,3 +400,28 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }
+
+/* Custom styles for edit experiment page */
+.edit-experiment-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-experiment-main {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.edit-experiment-simulation {
+  height: 100%;
+  width: 100%;
+}
+
+.edit-experiment-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}

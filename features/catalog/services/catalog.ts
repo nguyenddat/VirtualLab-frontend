@@ -1,12 +1,11 @@
 import { Subject, BookSet, Book, Chapter, Lesson } from '../utils/types';
-
-const API_BASE_URL = 'https://virtuallab.onrender.com/api';
+import { API_ENDPOINTS, apiHelpers } from '@/lib/configs/api';
 
 export const catalogService = {
   // Lấy danh sách các môn học
   async getSubjects(): Promise<Subject[]> {
     try {
-      const response = await fetch(`${API_BASE_URL}/subject`);
+      const response = await fetch(apiHelpers.buildUrl(API_ENDPOINTS.CATALOG.SUBJECTS));
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -20,7 +19,7 @@ export const catalogService = {
   // Lấy danh sách các bộ sách
   async getBookSets(): Promise<BookSet[]> {
     try {
-      const response = await fetch(`${API_BASE_URL}/bookset`);
+      const response = await fetch(apiHelpers.buildUrl(API_ENDPOINTS.CATALOG.BOOK_SETS));
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -34,7 +33,7 @@ export const catalogService = {
   // Lấy danh sách các sách
   async getBooks(): Promise<Book[]> {
     try {
-      const response = await fetch(`${API_BASE_URL}/book`);
+      const response = await fetch(apiHelpers.buildUrl(API_ENDPOINTS.CATALOG.BOOKS));
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -48,7 +47,7 @@ export const catalogService = {
   // Lấy danh sách các chapter
   async getChapters(): Promise<Chapter[]> {
     try {
-      const response = await fetch(`${API_BASE_URL}/chapter`);
+      const response = await fetch(apiHelpers.buildUrl(API_ENDPOINTS.CATALOG.CHAPTERS));
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -62,7 +61,7 @@ export const catalogService = {
   // Lấy danh sách các thí nghiệm (lessons)
   async getExperiments(): Promise<Lesson[]> {
     try {
-      const response = await fetch(`${API_BASE_URL}/experiment`);
+      const response = await fetch(apiHelpers.buildUrl(API_ENDPOINTS.CATALOG.EXPERIMENTS));
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

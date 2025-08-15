@@ -1,4 +1,5 @@
 import useSWR from "swr";
+import { apiHelpers } from "@/lib/configs/api";
 
 interface GitHubStarsResponse {
   stargazers_count: number;
@@ -8,7 +9,7 @@ async function fetchGithubStars(
   owner: string,
   repo: string
 ): Promise<GitHubStarsResponse> {
-  const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
+  const response = await fetch(apiHelpers.buildGithubUrl(owner, repo));
   if (!response.ok) {
     throw new Error("Failed to fetch stargazers count");
   }

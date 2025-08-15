@@ -3,6 +3,7 @@ import { Fraunces, Geist, Geist_Mono } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { SWRProvider } from "@/components/providers/swr-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/features/auth";
 import { APP_INFO } from "@/lib/configs/app-info";
 import { ThemeProvider } from "@/lib/contexts/theme-context";
@@ -49,6 +50,7 @@ export default function RootLayout({
 							<AuthProvider>
 								<TooltipProvider delayDuration={0} skipDelayDuration={100}>
 									{children}
+									<Toaster />
 								</TooltipProvider>
 							</AuthProvider>
 						</SWRProvider>

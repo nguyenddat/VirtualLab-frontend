@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { BookOpen, Play, ArrowRight } from 'lucide-react';
+import { BookOpen, Play, ArrowRight, Lock, Globe, CheckCircle, Circle } from 'lucide-react';
 import { Lesson } from '../utils/types';
 import { useCatalogSWR } from '../hooks/use-catalog-swr';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -48,6 +48,42 @@ export const LessonCard = ({ lesson, onSelect }: LessonCardProps) => {
     router.push(`/simulation?experiment_id=${lesson.id}`);
   };
 
+  // Helper function to get status badge
+  const getStatusBadge = () => {
+    if (lesson.status === 'populated') {
+      return (
+        <Badge variant="default" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+          <CheckCircle className="w-3 h-3 mr-1" />
+          Đã có dữ liệu
+        </Badge>
+      );
+    }
+    return (
+      <Badge variant="secondary" className="bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+        <Circle className="w-3 h-3 mr-1" />
+        Chưa có dữ liệu
+      </Badge>
+    );
+  };
+
+  // Helper function to get public status badge
+  const getPublicStatusBadge = () => {
+    if (lesson.public_status === 'public') {
+      return (
+        <Badge variant="outline" className="border-blue-200 text-blue-700 dark:border-blue-800 dark:text-blue-300">
+          <Globe className="w-3 h-3 mr-1" />
+          Công khai
+        </Badge>
+      );
+    }
+    return (
+      <Badge variant="outline" className="border-orange-200 text-orange-700 dark:border-orange-800 dark:text-orange-300">
+        <Lock className="w-3 h-3 mr-1" />
+        Riêng tư
+      </Badge>
+    );
+  };
+
   return (
     <Card
       className={`group relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full flex flex-col border-0 shadow-md hover:shadow-2xl min-h-[420px] ${
@@ -61,6 +97,12 @@ export const LessonCard = ({ lesson, onSelect }: LessonCardProps) => {
        <div className="relative bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950/20 dark:to-indigo-950/20 p-6 pb-4">
          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-blue-200/30 to-transparent dark:from-blue-800/20 rounded-full -translate-y-16 translate-x-16"></div>
          
+         {/* Status badges */}
+         <div className="flex gap-2 mb-3">
+           {getStatusBadge()}
+           {getPublicStatusBadge()}
+         </div>
+         
          {/* Title */}
          <h3 className="font-bold text-xl text-gray-900 dark:text-gray-100 mb-3 line-clamp-2 leading-tight">
            {lesson.name}
@@ -68,7 +110,7 @@ export const LessonCard = ({ lesson, onSelect }: LessonCardProps) => {
          
          {/* Description */}
          <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed">
-           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.
+           {lesson.description || 'Chưa có mô tả cho thí nghiệm này.'}
          </p>
        </div>
 

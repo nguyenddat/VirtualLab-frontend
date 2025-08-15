@@ -1,5 +1,6 @@
 import { Source, SourceObject } from './types';
 import { ExperimentData } from '../../services/simulation';
+import { apiHelpers } from '@/lib/configs/api';
 
 // Hàm parse sources từ string array hoặc object array
 export const parseSources = (sources: string[] | SourceObject[]): Source[] => {
@@ -30,7 +31,7 @@ export const parseSources = (sources: string[] | SourceObject[]): Source[] => {
 // Hàm mở PDF với trang cụ thể
 export const openPDFWithPage = (pdfPath: string, page: number) => {
 	// Tạo URL với anchor để điều hướng đến trang cụ thể
-	const pdfUrl = `https://virtuallab.onrender.com/static/${pdfPath}#page=${page}`;
+	const pdfUrl = `${apiHelpers.buildStaticUrl(pdfPath)}#page=${page}`;
 	window.open(pdfUrl, '_blank');
 };
 

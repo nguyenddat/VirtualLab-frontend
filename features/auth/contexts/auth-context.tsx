@@ -12,7 +12,8 @@ import { PageLoading } from "@/components/common/page-loading";
 import { getItem, removeItem, setItem } from "@/lib/utils/storage";
 import { useAuthSWR } from "../hooks/use-auth-swr";
 import type { IPostLogin, IPostRegister } from "../services/auth";
-import type { IUser } from "../utils/types";
+import type { IUser, UserRole } from "../utils/types";
+import { canAccessDashboard, canAccessExplore, hasRole } from "../utils/functions";
 
 interface IAuthContext {
 	user: IUser | undefined;
@@ -33,6 +34,12 @@ interface IAuthContext {
 	loginError: Error | null;
 	registerError: Error | null;
 	userError: Error | null;
+
+	// Role-based utilities
+	hasRole: (requiredRole: UserRole) => boolean;
+	canAccessDashboard: () => boolean;
+	canAccessExplore: () => boolean;
+	userRole: UserRole | undefined;
 }
 
 const STORAGE_KEYS = {
@@ -49,6 +56,7 @@ interface IAuthProviderProps {
 
 export const AuthProvider = ({ children }: IAuthProviderProps) => {
 	const [isInitializing, setIsInitializing] = useState(true);
+	const [localUser, setLocalUser] = useState<IUser | undefined>(undefined);
 
 	const {
 		user,
@@ -71,6 +79,7 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
 		removeItem(STORAGE_KEYS.ACCESS_TOKEN);
 		removeItem(STORAGE_KEYS.REFRESH_TOKEN);
 		removeItem(STORAGE_KEYS.USER);
+		setLocalUser(undefined);
 	};
 
 	useEffect(() => {
@@ -80,7 +89,21 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
 				const storedUser = getItem(STORAGE_KEYS.USER);
 
 				if (accessToken && storedUser) {
-					await authRefreshUser();
+					try {
+						const parsedUser = JSON.parse(storedUser);
+						setLocalUser(parsedUser);
+						console.log("Restored user from localStorage:", parsedUser);
+						
+						// Try to refresh user data from API
+						try {
+							await authRefreshUser();
+						} catch (error) {
+							console.log("Failed to refresh user from API, using localStorage data");
+						}
+					} catch (error) {
+						console.error("Failed to parse stored user:", error);
+						clearStoredAuth();
+					}
 				}
 			} catch (error) {
 				console.error("Failed to initialize auth:", error);
@@ -96,6 +119,7 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
 		setItem(STORAGE_KEYS.ACCESS_TOKEN, token);
 		if (userData) {
 			setItem(STORAGE_KEYS.USER, JSON.stringify(userData));
+			setLocalUser(userData);
 		}
 	};
 
@@ -119,16 +143,33 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
 	};
 
 	const refreshUser = async () => {
-		await authRefreshUser();
-
-		if (user) {
-			setItem(STORAGE_KEYS.USER, JSON.stringify(user));
+		// Try to get fresh user data from API
+		try {
+			await authRefreshUser();
+		} catch (error) {
+			console.log("Failed to refresh user from API, keeping localStorage data");
 		}
 	};
 
+	// Use SWR user if available, otherwise fall back to localStorage user
+	const currentUser = user || localUser;
+	// Only consider userError if we don't have localStorage data
+	const currentIsAuthenticated = Boolean(currentUser && (!userError || localUser));
+
+	// Debug logs
+	useEffect(() => {
+		console.log("Auth state changed:", {
+			localUser: !!localUser,
+			swrUser: !!user,
+			userError: !!userError,
+			currentUser: !!currentUser,
+			isAuthenticated: currentIsAuthenticated,
+		});
+	}, [localUser, user, userError, currentUser, currentIsAuthenticated]);
+
 	const contextValue: IAuthContext = {
-		user,
-		isAuthenticated,
+		user: currentUser,
+		isAuthenticated: currentIsAuthenticated,
 		isLoading: isInitializing || isLoadingUser,
 
 		login,
@@ -145,6 +186,12 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
 
 		resetLogin,
 		resetRegister,
+
+		// Role-based utilities
+		hasRole: (requiredRole: UserRole) => hasRole(currentUser?.role, requiredRole),
+		canAccessDashboard: () => canAccessDashboard(currentUser?.role),
+		canAccessExplore: () => canAccessExplore(currentUser?.role),
+		userRole: currentUser?.role,
 	};
 
 	return (

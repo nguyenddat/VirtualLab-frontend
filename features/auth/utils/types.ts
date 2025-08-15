@@ -8,12 +8,15 @@ export interface ISession {
   id?: string;
 }
 
+export type UserRole = 'student' | 'teacher' | 'admin';
+
 export interface IUser {
   id?: string;
   userName?: string;
   email?: string;
   emailVerified?: boolean;
   image?: string;
+  role?: UserRole;
   createdAt?: string;
   updatedAt?: string;
 }

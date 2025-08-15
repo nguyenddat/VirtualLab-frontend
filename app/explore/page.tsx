@@ -1,3 +1,5 @@
+"use client";
+
 import { Catalog } from '@/features/catalog';
 
 const ExplorePage = () => {

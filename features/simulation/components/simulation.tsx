@@ -32,7 +32,7 @@ export const PhetCCKDC = forwardRef<HTMLIFrameElement, PhetCCKDCProps>(
 		}, [experimentData]);
 
 		return (
-			<div className="h-full w-full">
+			<div className="h-full w-full overflow-hidden">
 				<iframe
 					ref={(iframeRef) => {
 						localIframeRef.current = iframeRef;

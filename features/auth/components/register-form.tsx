@@ -21,13 +21,21 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { APP_INFO } from "@/lib/configs/app-info";
 import { cn } from "@/lib/utils/tailwind";
 import { useAuthContext } from "../contexts/auth-context";
+import { getRedirectPathByRole } from "../utils/functions";
 
 const formSchema = z
 	.object({
-		userName: z
+		username: z
 			.string()
 			.min(3, { message: "Username must be at least 3 characters" }),
 		email: z.string().email({ message: "Please enter a valid email address" }),
@@ -35,6 +43,7 @@ const formSchema = z
 			.string()
 			.min(6, { message: "Password must be at least 6 characters" }),
 		confirmPassword: z.string(),
+		role: z.enum(['student', 'teacher', 'admin'] as const),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		message: "Passwords do not match",
@@ -51,24 +60,27 @@ export const RegisterForm = () => {
 		registerError,
 		resetRegister,
 		isAuthenticated,
+		user,
 	} = useAuthContext();
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			userName: "",
+			username: "",
 			email: "",
 			password: "",
 			confirmPassword: "",
+			role: "student",
 		},
 	});
 
 	// Redirect if already authenticated
 	useEffect(() => {
-		if (isAuthenticated) {
-			router.push("/dashboard");
+		if (isAuthenticated && user) {
+			const redirectPath = getRedirectPathByRole(user.role);
+			router.push(redirectPath);
 		}
-	}, [isAuthenticated, router]);
+	}, [isAuthenticated, user, router]);
 
 	// Reset register error when form values change
 	useEffect(() => {
@@ -79,9 +91,10 @@ export const RegisterForm = () => {
 
 	async function onSubmit(values: FormValues) {
 		await register({
-			userName: values.userName,
+			username: values.username,
 			email: values.email,
 			password: values.password,
+			role: values.role,
 		});
 	}
 
@@ -101,13 +114,13 @@ export const RegisterForm = () => {
 
 								<FormField
 									control={form.control}
-									name="userName"
+									name="username"
 									render={({ field }) => (
 										<FormItem className="gap-4 grid">
-											<FormLabel htmlFor="userName">Username</FormLabel>
+											<FormLabel htmlFor="username">Username</FormLabel>
 											<FormControl>
 												<Input
-													id="userName"
+													id="username"
 													placeholder="johndoe"
 													disabled={isRegistering}
 													{...field}
@@ -133,6 +146,29 @@ export const RegisterForm = () => {
 													{...field}
 												/>
 											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name="role"
+									render={({ field }) => (
+										<FormItem className="gap-4 grid">
+											<FormLabel htmlFor="role">Role</FormLabel>
+											<Select onValueChange={field.onChange} defaultValue={field.value}>
+												<FormControl>
+													<SelectTrigger>
+														<SelectValue placeholder="Select your role" />
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													<SelectItem value="student">Student</SelectItem>
+													<SelectItem value="teacher">Teacher</SelectItem>
+													<SelectItem value="admin">Admin</SelectItem>
+												</SelectContent>
+											</Select>
 											<FormMessage />
 										</FormItem>
 									)}

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Message, StreamResponse, ElectricExplainRequest } from '../types';
 import { parseSources, getCircuitData } from '../utils';
+import { API_ENDPOINTS, apiHelpers } from '@/lib/configs/api';
 
 interface UseChatStreamProps {
 	iframeRef: React.RefObject<HTMLIFrameElement | null>;
@@ -63,7 +64,7 @@ export const useChatStream = ({ iframeRef }: UseChatStreamProps) => {
 				graph: circuitJson
 			};
 
-			const response = await fetch('https://virtuallab.onrender.com/api/physics/student_explain', {
+			const response = await fetch(apiHelpers.buildUrl(API_ENDPOINTS.SIMULATION.STUDENT_EXPLAIN), {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(requestBody)

@@ -1,7 +1,11 @@
 export interface Lesson {
   id: string;
   name: string;
+  description: string;
+  status: 'blank' | 'populated';
+  public_status: 'private' | 'public';
   chapter_id: string;
+  created_by: string;
 }
 
 export interface Subject {

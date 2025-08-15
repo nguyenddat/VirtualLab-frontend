@@ -1,19 +1,45 @@
-import type { ISession } from "./types";
+import type { ISession, UserRole } from "./types";
 
 export const generateSampleSession = (): ISession => {
-  const now = new Date();
-  const expirationTime = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-
   return {
-    id: `session_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`,
-    token: `jwt_${Math.random().toString(36).substring(2, 15)}${Math.random()
-      .toString(36)
-      .substring(2, 15)}`,
-    userId: `user_${Math.random().toString(36).substring(2, 10)}`,
-    createdAt: now.toISOString(),
-    updatedAt: now.toISOString(),
-    expiresAt: expirationTime.toISOString(),
-    userAgent:
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    id: "sample-session-id",
+    token: "sample-access-token",
+    userId: "sample-user-id",
+    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours from now
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    userAgent: "sample-user-agent",
   };
+};
+
+export const getRedirectPathByRole = (role?: UserRole): string => {
+  switch (role) {
+    case 'admin':
+      return '/dashboard';
+    case 'student':
+    case 'teacher':
+      return '/explore';
+    default:
+      return '/explore'; // Default to explore for unknown roles
+  }
+};
+
+export const hasRole = (userRole?: UserRole, requiredRole?: UserRole): boolean => {
+  if (!userRole || !requiredRole) return false;
+  
+  const roleHierarchy: Record<UserRole, number> = {
+    student: 1,
+    teacher: 2,
+    admin: 3,
+  };
+  
+  return roleHierarchy[userRole] >= roleHierarchy[requiredRole];
+};
+
+export const canAccessDashboard = (role?: UserRole): boolean => {
+  return role === 'admin';
+};
+
+export const canAccessExplore = (role?: UserRole): boolean => {
+  return role === 'student' || role === 'teacher' || role === 'admin';
 };

@@ -67,24 +67,26 @@ export function StatisticBlock({
 	const trendColorClass = trend ? trendColors[trend.direction] : "";
 
 	return (
-		<Card className={cn("@container/card", variantStyles[variant], className)}>
-			<CardHeader className="space-y-2">
-				<div className="flex justify-between items-center">
-					<div className="flex-1 space-y-1">
-						{description && (
-							<p className="text-muted-foreground text-sm">{description}</p>
-						)}
-						<h3 className="font-medium text-muted-foreground text-sm">
+		<Card className={cn("h-full", variantStyles[variant], className)}>
+			<CardHeader className="space-y-2 pb-2">
+				<div className="flex justify-between items-start">
+					<div className="flex-1 min-w-0">
+						<h3 className="font-medium text-muted-foreground text-sm truncate">
 							{title}
 						</h3>
+						{description && (
+							<p className="text-muted-foreground text-xs mt-1 line-clamp-2">
+								{description}
+							</p>
+						)}
 					</div>
-					{icon && <div className="text-muted-foreground">{icon}</div>}
+					{icon && <div className="text-muted-foreground flex-shrink-0 ml-2">{icon}</div>}
 				</div>
 
-				<div className="flex justify-between items-center">
+				<div className="flex justify-between items-end">
 					<div
 						className={cn(
-							"font-semibold tabular-nums text-2xl @[250px]/card:text-3xl @[350px]/card:text-4xl",
+							"font-semibold tabular-nums text-2xl lg:text-3xl",
 							valueClassName,
 						)}
 					>
@@ -92,22 +94,26 @@ export function StatisticBlock({
 					</div>
 
 					{(trend || badge) && (
-						<div className="flex items-center gap-2">
+						<div className="flex items-center gap-1 flex-shrink-0">
 							{trend && (
 								<Badge
 									variant="outline"
-									className={cn("gap-1", trendColorClass)}
+									className={cn("gap-1 text-xs px-1 py-0.5", trendColorClass)}
 								>
-									{TrendIcon && <TrendIcon className="size-3" />}
-									{typeof trend.value === "number" &&
-									trend.direction !== "neutral"
-										? `${trend.direction === "up" ? "+" : ""}${trend.value}%`
-										: trend.value}
+									{TrendIcon && <TrendIcon className="size-2.5" />}
+									<span className="truncate text-xs">
+										{typeof trend.value === "number" &&
+										trend.direction !== "neutral"
+											? `${trend.direction === "up" ? "+" : ""}${trend.value}%`
+											: trend.value}
+									</span>
 								</Badge>
 							)}
 
 							{badge && (
-								<Badge variant={badge.variant || "outline"}>{badge.text}</Badge>
+								<Badge variant={badge.variant || "outline"} className="text-xs px-1 py-0.5">
+									{badge.text}
+								</Badge>
 							)}
 						</div>
 					)}

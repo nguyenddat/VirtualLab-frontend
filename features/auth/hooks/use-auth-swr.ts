@@ -18,6 +18,7 @@ export const AUTH_CACHE_KEYS = {
 
 export function useAuthSWR() {
 
+  // Enable SWR for user data with /me endpoint
   const {
     data: user,
     error: userError,
@@ -28,8 +29,8 @@ export function useAuthSWR() {
     revalidateOnReconnect: false,
     shouldRetryOnError: false,
     onError: (error) => {
-      toast.error("Failed to get user info");
       console.error("Failed to get user info:", error);
+      // Don't show toast error for /me endpoint failures
     },
   });
 

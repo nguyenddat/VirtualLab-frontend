@@ -1,11 +1,14 @@
 "use client";
 
-import { redirect } from "next/navigation"
+import { redirect } from "next/navigation";
+import { AdminGuard } from "@/features/auth";
 
 const DashboardPage = () => {
     return (
-        redirect('/dashboard/overview')
-    )
-}
+        <AdminGuard>
+            {redirect('/dashboard/overview')}
+        </AdminGuard>
+    );
+};
 
-export default DashboardPage
+export default DashboardPage;
